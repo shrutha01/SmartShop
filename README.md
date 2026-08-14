@@ -201,10 +201,10 @@ Lightweight laptop with long battery
 
 | Home Screen | Search Results | Product Detail |
 |---|---|---|
-| Home(<img width="540" height="1131" alt="Home" src="https://github.com/user-attachments/assets/100b56fa-0fa2-4085-9de9-972a51146511" />
+| Home(<img width="180" height="377" alt="Home" src="https://github.com/user-attachments/assets/100b56fa-0fa2-4085-9de9-972a51146511" />
 
-) | Results]<img width="540" height="1131" alt="Result" src="https://github.com/user-attachments/assets/3bdb42a7-ace4-4ee1-b570-375c520f413f" />
-) | Detail(<img width="1080" height="2262" alt="Product" src="https://github.com/user-attachments/assets/fa71d694-76cf-4dbb-bfa4-bf63162f39f1" />
+) | Results]<img width="180" height="377" alt="Result" src="https://github.com/user-attachments/assets/3bdb42a7-ace4-4ee1-b570-375c520f413f" />
+) | Detail(<img width="180" height="377" alt="Product" src="https://github.com/user-attachments/assets/fa71d694-76cf-4dbb-bfa4-bf63162f39f1" />
 ) |
 
 ---
