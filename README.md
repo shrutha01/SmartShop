@@ -1,6 +1,6 @@
 # SmartShop 🛍️
 
-> **Conversational Product Search for eCommerce** — Technical Assessment (Option 3)
+> **Conversational Product Search for eCommerce** 
 
 SmartShop is a React Native mobile shopping application that allows users to search for products using natural-language queries. It uses **Google Gemini AI** to understand the user's intent and extract details such as product category, budget, brand, and use case.
 
