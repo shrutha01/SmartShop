@@ -1,15 +1,30 @@
-# SmartShop AI 🛍️
+# SmartShop 🛍️
 
 > **Conversational Product Search for eCommerce** — Technical Assessment (Option 3)
 
-A polished React Native (Expo) mobile application that lets users find products using plain English queries, powered by **Gemini AI** with a robust local fallback parser.
+SmartShop is a React Native mobile shopping application that allows users to search for products using natural-language queries. It uses **Google Gemini AI** to understand the user's intent and extract details such as product category, budget, brand, and use case.
+
+If Gemini is unavailable, SmartShop automatically uses a **local rule-based parser**, so the search functionality continues to work without an API connection.
 
 ---
 
 ## 📱 Problem Statement
 
-Traditional keyword search in eCommerce is rigid and unforgiving. Users must know the exact product name or category.  
-**SmartShop AI** solves this by letting users describe what they want in natural language — the AI understands their intent, extracts structured search parameters, and returns the most relevant products with an explanation of why each one matches.
+Traditional eCommerce search often requires users to enter exact product names or keywords.
+
+For example, a user may search:
+
+> "Running shoes under ₹5000 for beginners"
+
+Instead of requiring the user to search for the exact category, SmartShop understands the complete request and extracts:
+
+```text
+Category  → Running Shoes
+Budget    → ₹5000
+Use Case  → Beginners
+```
+
+The application then filters and ranks relevant products from its local product dataset.
 
 ---
 
@@ -17,54 +32,115 @@ Traditional keyword search in eCommerce is rigid and unforgiving. Users must kno
 
 | Feature | Description |
 |---|---|
-| 🗣️ Natural Language Search | Type queries like "running shoes for beginners under ₹5000" |
-| 🧠 AI Intent Extraction | Extracts category, price, brand, use-case, and features |
-| 🎯 Smart Product Matching | Weighted scoring across 6 criteria |
-| 📋 Match Explanation | Each product explains why it matches your query |
-| 🔄 Local Fallback | Works without an API key using built-in parser |
-| 🕐 Search History | Recent searches saved via AsyncStorage |
-| 📊 Sort & Filter | Sort results by relevance, price (low/high), or rating |
-| 🌙 Dark Theme | Polished dark UI with purple accent |
+| 🗣️ Natural Language Search | Search for products using normal conversational language |
+| 🧠 Gemini AI Intent Extraction | Understands category, budget, brand, use case, features, and keywords |
+| 🎯 Smart Product Matching | Filters and ranks products based on the extracted intent |
+| 📋 Match Explanation | Shows why a product matches the user's search |
+| 🔄 Local Parser Fallback | Continues working when Gemini is unavailable |
+| 🕐 Recent Searches | Stores recent searches locally |
+| 📊 Sort & Filter | Sort results by relevance, price, and rating |
+| 🌙 Dark Theme | Clean dark-themed mobile interface |
+| 📦 Product Categories | Supports 40 product categories |
+| 🛍️ Product Dataset | Includes 120+ products for demonstration |
 
 ---
 
 ## 🤖 How the AI Works
 
+```text
+                User Query
+                    │
+                    ▼
+        ┌────────────────────────┐
+        │      Gemini AI         │
+        │ gemini-flash-lite-     │
+        │ latest                 │
+        └────────────┬───────────┘
+                     │
+                     ▼
+          Structured User Intent
+                     │
+        ┌────────────┴────────────┐
+        │                         │
+        ▼                         ▼
+   Category                  Price / Budget
+   Brand                     Use Case
+   Features                  Keywords
+        │                         │
+        └────────────┬────────────┘
+                     ▼
+        ┌────────────────────────┐
+        │   Product Matcher      │
+        │  Filtering & Ranking   │
+        └────────────┬───────────┘
+                     ▼
+        Relevant Product Results
+                     │
+                     ▼
+           Match Explanations
 ```
+
+### Fallback mechanism
+
+If Gemini cannot be used because the API key is missing or the API request fails:
+
+```text
 User Query
     │
     ▼
-┌─────────────────────────────┐
-│   Gemini 1.5 Flash API      │  ◄── (if API key is present)
-│   extracts structured JSON: │
-│   { category, maxPrice,     │
-│     brand, useCase,         │
-│     features, keywords }    │
-└──────────┬──────────────────┘
-           │  (on failure / no key)
-           ▼
-┌─────────────────────────────┐
-│  Local Intent Parser        │  ◄── always available fallback
-│  (regex + keyword matching) │
-└──────────┬──────────────────┘
-           │
-           ▼
-┌─────────────────────────────┐
-│  Product Matching Algorithm │
-│  ─────────────────────────  │
-│  Category match  → 40 pts   │
-│  Price in budget → 30 pts   │
-│  Use-case match  → 20 pts   │
-│  Feature/keyword → 15 pts   │
-│  Brand match     → 10 pts   │
-│  Rating bonus    →  5 pts   │
-└──────────┬──────────────────┘
-           │
-           ▼
-    Sorted Results + Explanation
+Gemini API
+    │
+    │ unavailable / error
+    ▼
+Local Intent Parser
+    │
+    ▼
+Product Matcher
+    │
+    ▼
+Relevant Results
 ```
 
-> The AI **never invents products**. It only understands the query. All products come from a local JSON dataset.
+This makes the application resilient and allows the core search functionality to continue working without Gemini.
+
+---
+
+## 🧪 Example AI Intent Extraction
+
+### Query
+
+```text
+Running shoes under ₹5000 for beginners
+```
+
+Gemini extracts structured intent similar to:
+
+```json
+{
+  "category": "running shoes",
+  "maxPrice": 5000,
+  "useCase": "beginners"
+}
+```
+
+The application then uses this structured intent to identify relevant products from the local dataset.
+
+### Another example
+
+```text
+Pens with price 10 rupees
+```
+
+The extracted intent is:
+
+```json
+{
+  "category": "pens",
+  "maxPrice": 10
+}
+```
+
+Only products belonging to the relevant category and satisfying the budget are considered.
 
 ---
 
@@ -72,55 +148,69 @@ User Query
 
 | Layer | Technology |
 |---|---|
-| Framework | React Native + Expo (SDK 57) |
-| Navigation | React Navigation v6 (Native Stack) |
-| AI | Google Gemini 1.5 Flash API |
-| Storage | AsyncStorage (recent searches) |
-| UI Extras | expo-linear-gradient, expo-constants |
-| Language | JavaScript (ES2020) |
-| Target | Android (primary), iOS, Web |
+| Framework | React Native |
+| Development Platform | Expo SDK 54 |
+| React Native Version | 0.81.5 |
+| Language | JavaScript |
+| AI | Google Gemini API |
+| Gemini Model | `gemini-flash-lite-latest` |
+| Navigation | React Navigation |
+| Local Storage | AsyncStorage |
+| UI | Expo Linear Gradient |
+| Configuration | Expo Constants + environment variables |
+| Primary Target | Android |
 
 ---
 
 ## 📁 Project Structure
 
-```
-SmartShopAI/
-├── App.js                          # Root: Navigation + providers
-├── app.json                        # Expo configuration
-├── package.json                    # Dependencies
-├── .env.example                    # API key template
+```text
+SmartShop/
+│
+├── App.js
+├── app.json
+├── app.config.js
+├── package.json
+├── package-lock.json
+├── .env.example
 ├── .gitignore
 ├── README.md
 │
-├── assets/                         # App icons and splash screen
+├── assets/
+│   └── App icons and splash screen assets
 │
 └── src/
-    ├── constants/
-    │   └── theme.js                # Colors, fonts, spacing, example queries
-    │
-    ├── data/
-    │   └── products.js             # 20 sample products across 5 categories
-    │
-    ├── services/
-    │   └── aiService.js            # Gemini API integration + fallback
-    │
-    ├── utils/
-    │   ├── localParser.js          # Local intent parser (no API needed)
-    │   ├── productMatcher.js       # Scoring and ranking algorithm
-    │   └── useRecentSearches.js    # AsyncStorage hook for search history
     │
     ├── components/
-    │   ├── ProductCard.js          # Product result card with explanation
-    │   ├── SearchBar.js            # Animated search input
-    │   ├── QueryChip.js            # Tap-to-search suggestion chip
-    │   ├── LoadingOverlay.js       # Animated AI-processing loading screen
-    │   └── EmptyState.js           # No results found view
+    │   ├── EmptyState.js
+    │   ├── LoadingOverlay.js
+    │   ├── ProductCard.js
+    │   ├── QueryChip.js
+    │   └── SearchBar.js
     │
-    └── screens/
-        ├── HomeScreen.js           # Search bar, chips, recent, how-it-works
-        ├── ResultsScreen.js        # Intent summary, sorted product list
-        └── ProductDetailScreen.js  # Full product detail + score bar
+    ├── constants/
+    │   └── theme.js
+    │
+    ├── data/
+    │   └── products.js
+    │
+    ├── screens/
+    │   ├── HomeScreen.js
+    │   ├── ProductDetailScreen.js
+    │   └── ResultsScreen.js
+    │
+    ├── services/
+    │   └── aiService.js
+    │
+    ├── tests/
+    │   ├── geminiTest.js
+    │   ├── modelCheck.js
+    │   └── queryTest.js
+    │
+    └── utils/
+        ├── localParser.js
+        ├── productMatcher.js
+        └── useRecentSearches.js
 ```
 
 ---
@@ -129,75 +219,216 @@ SmartShopAI/
 
 ### Prerequisites
 
-- **Node.js** v18+ — [nodejs.org](https://nodejs.org)
-- **npm** v9+
-- **Expo Go** app on your Android/iOS phone — [expo.dev/go](https://expo.dev/go)
-- *(Optional)* Android Studio for emulator
+- Node.js 18 or later
+- npm
+- Expo Go on an Android/iOS device
+- Internet connection for Gemini AI features
 
-### 1 — Clone / Download the project
+---
+
+### 1. Clone the Repository
 
 ```bash
-# If from GitHub:
-git clone https://github.com/your-username/SmartShopAI.git
-cd SmartShopAI
-
-# If from ZIP:
-unzip SmartShopAI.zip
-cd SmartShopAI
+git clone https://github.com/shrutha01/SmartShop.git
+cd SmartShop
 ```
 
-### 2 — Install dependencies
+---
+
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 3 — (Optional) Add Gemini API Key
+---
 
-The app works fully without a key using the local parser.  
-To enable Gemini AI, get a free key from [aistudio.google.com](https://aistudio.google.com/app/apikey) and add it to `app.json`:
+### 3. Configure Gemini API
 
-```json
-"extra": {
-  "geminiApiKey": "YOUR_ACTUAL_KEY_HERE"
-}
+SmartShop can work without a Gemini API key using its built-in local parser.
+
+To enable Gemini AI:
+
+1. Create a Gemini API key from:
+
+   https://aistudio.google.com/app/apikey
+
+2. Create a `.env` file in the project root.
+
+3. Add:
+
+```env
+GEMINI_API_KEY=your_actual_api_key_here
 ```
 
-> ⚠️ **Never commit your real API key to git.** The `.gitignore` excludes `.env` but `app.json` is tracked — only add the key locally or use a CI secret.
-
-### 4 — Run the application
+4. Restart Expo:
 
 ```bash
-# Start Expo dev server
-npx expo start
+npx expo start --clear
+```
 
-# Scan the QR code with Expo Go app on your phone
-# OR press 'a' to open Android emulator
-# OR press 'w' to open in web browser
+### 🔐 API Key Security
+
+The real API key should **never** be added to:
+
+- `app.json`
+- `app.config.js`
+- `App.js`
+- `README.md`
+- GitHub
+
+The `.env` file is excluded through `.gitignore`.
+
+A safe `.env.example` file is included in the repository:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 ---
 
-## 📲 Example Queries to Demo
+## ▶️ Running the Application
 
-These queries are guaranteed to return relevant results:
+Start the Expo development server:
 
+```bash
+npx expo start
 ```
-Show me running shoes under ₹5,000 suitable for beginners
-Find a laptop for students under ₹60000
-Show wireless headphones under ₹3000
+
+Then:
+
+- Scan the QR code using **Expo Go** on an Android device
+- Or press `a` to open an Android emulator
+- Or press `w` to run the web version
+
+For a clean restart after changing environment variables:
+
+```bash
+npx expo start --clear
+```
+
+---
+
+## 🧪 Testing Gemini Integration
+
+The project includes a Gemini integration test.
+
+From the project directory, run:
+
+```bash
+node src/tests/geminiTest.js
+```
+
+The test verifies that Gemini can process natural-language queries and return structured intent.
+
+Example queries tested include:
+
+```text
+Running shoes under ₹5000 for beginners
+Pens with price 10 rupees
+```
+
+---
+
+## 📲 Example Queries
+
+Try natural-language queries such as:
+
+```text
+Running shoes under ₹5000 for beginners
+```
+
+```text
+Pens with price 10 rupees
+```
+
+```text
 Find a backpack for college students under ₹2000
+```
+
+```text
 Budget smartphone under ₹25000
+```
+
+```text
 Sony headphones
+```
+
+```text
 Adidas running shoes
+```
+
+```text
 Lightweight laptop with long battery
 ```
+
+```text
+Show wireless headphones under ₹3000
+```
+
+The application extracts the relevant intent and uses it to find suitable products.
+
+---
+
+## 🔄 Gemini + Local Fallback
+
+SmartShop uses Gemini as the primary intent extraction system.
+
+```text
+                  Search Query
+                       │
+                       ▼
+                 Gemini API
+                       │
+              ┌────────┴────────┐
+              │                 │
+           Success             Error
+              │                 │
+              ▼                 ▼
+       Gemini Intent      Local Parser
+              │                 │
+              └────────┬────────┘
+                       ▼
+                Product Matcher
+                       │
+                       ▼
+                Search Results
+```
+
+This means the application remains usable even when:
+
+- The Gemini API is unavailable
+- The API request fails
+- The API key is not configured
+- There is a temporary network problem
+
+---
+
+## 🛍️ Product Matching
+
+The product matching system uses the structured intent extracted from the user's query.
+
+Relevant factors include:
+
+- Product category
+- Price/budget
+- Brand
+- Use case
+- Features
+- Keywords
+- Product rating
+
+The application first identifies suitable products and then ranks them based on relevance.
+
+Each result also provides an explanation showing why the product matches the user's search.
+
+> **Important:** Gemini is used to understand the user's query. Products are selected from the application's local product dataset rather than being invented by the AI.
 
 ---
 
 ## 📸 Screenshots
 
-
+### Home Screen, Search Results & Product Detail
 
 | Home Screen | Search Results | Product Detail |
 |:---:|:---:|:---:|
@@ -205,48 +436,52 @@ Lightweight laptop with long battery
 
 ---
 
-## 🏗️ Build Android APK
+## 🔒 Security
 
-### Expo Go (Development — recommended for demo)
+The project follows basic API-key security practices:
 
-```bash
-npx expo start
-# Press 'a' for Android emulator or scan QR for device
-```
+- Real Gemini API key is stored locally in `.env`
+- `.env` is excluded from Git
+- `.env.example` contains only a placeholder
+- No API key is hardcoded into the application source
+- No API key is included in `app.json`
+- No API key is included in the README
 
-### Production APK via EAS Build (requires Expo account)
-
-```bash
-# Install EAS CLI
-npm install -g eas-cli
-
-# Login
-eas login
-
-# Configure (first time only)
-eas build:configure
-
-# Build APK for Android
-eas build -p android --profile preview
-```
-
-The APK download link will appear in the terminal after the cloud build completes.
+**Never commit your `.env` file to GitHub.**
 
 ---
 
+## 📦 Repository
 
-## 📚 Third-Party Libraries
+GitHub:
 
-| Library | Version | Purpose |
-|---|---|---|
-| expo | ~57.0.12 | Core Expo SDK |
-| react-native | 0.86.2 | Mobile framework |
-| @react-navigation/native | ^6.x | App navigation |
-| @react-navigation/native-stack | ^6.x | Stack navigator |
-| react-native-screens | ~4.5.0 | Native screen optimization |
-| react-native-safe-area-context | 5.4.0 | Safe area handling |
-| expo-linear-gradient | ~14.x | Gradient backgrounds |
-| expo-constants | ~17.x | Access app.json extras |
-| @react-native-async-storage/async-storage | 2.1.2 | Recent search persistence |
+**https://github.com/shrutha01/SmartShop**
 
+---
 
+## 🎯 Assessment Highlights
+
+SmartShop demonstrates:
+
+- Natural-language product search
+- AI-based intent extraction
+- Structured JSON intent
+- Product category filtering
+- Budget-aware search
+- Use-case understanding
+- Product relevance ranking
+- Recommendation explanations
+- Local fallback processing
+- Search history
+- Mobile UI development using React Native and Expo
+- Secure local API-key configuration
+
+---
+
+## 👩‍💻 Project
+
+**SmartShop**
+
+AI-powered conversational product search mobile application developed as part of a technical assessment.
+
+---
