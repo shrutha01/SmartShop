@@ -201,7 +201,8 @@ Lightweight laptop with long battery
 
 | Home Screen | Search Results | Product Detail |
 |---|---|---|
-| ![Home](./screenshots/home.png) | ![Results](./screenshots/results.png) | ![Detail](./screenshots/detail.png) |
+| ![Home](<img width="1080" height="2262" alt="Screenshot_2026-08-14-16-12-18-386_host exp exponent" src="https://github.com/user-attachments/assets/2f9078a2-ffa6-41d7-8faf-582cd9f7b6d1" />
+) | ![Results](./screenshots/results.png) | ![Detail](./screenshots/detail.png) |
 
 ---
 
@@ -234,23 +235,6 @@ The APK download link will appear in the terminal after the cloud build complete
 
 ---
 
-## 📦 Create a ZIP Submission
-
-Run this in the project root (Windows PowerShell):
-
-```powershell
-# From the parent directory of SmartShopAI:
-Compress-Archive -Path .\SmartShopAI\* -DestinationPath SmartShopAI_submission.zip -Exclude "node_modules","*.zip",".expo"
-```
-
-Or on Linux/Mac:
-
-```bash
-cd ..
-zip -r SmartShopAI_submission.zip SmartShopAI/ --exclude "*/node_modules/*" --exclude "*/.expo/*"
-```
-
----
 
 ## 📚 Third-Party Libraries
 
@@ -266,37 +250,4 @@ zip -r SmartShopAI_submission.zip SmartShopAI/ --exclude "*/node_modules/*" --ex
 | expo-constants | ~17.x | Access app.json extras |
 | @react-native-async-storage/async-storage | 2.1.2 | Recent search persistence |
 
----
 
-## ⚠️ Limitations
-
-- Product dataset is static (20 products); a real app would use a backend API.
-- Gemini API calls require internet access; offline mode uses the local parser only.
-- Image URLs are from Unsplash (may occasionally change or fail — emoji fallbacks are shown).
-- No cart, checkout, or payment functionality (out of scope for this assessment).
-- The local parser is heuristic-based and may miss complex multi-intent queries.
-
----
-
-## 🚀 Future Enhancements
-
-- [ ] Connect to a real product database (Firebase / REST API)
-- [ ] Voice search input
-- [ ] Wishlist and cart functionality
-- [ ] Product comparison
-- [ ] User authentication and personalisation
-- [ ] Price history graphs
-- [ ] Filter sidebar (multiple categories simultaneously)
-- [ ] Gemini streaming for faster response display
-- [ ] Dark/Light theme toggle
-- [ ] Offline product caching
-
----
-
-## 👨‍💻 Assessment Details
-
-- **Assessment**: College Technical Assessment — Option 3
-- **Topic**: Conversational Search for eCommerce
-- **Framework**: React Native + Expo
-- **AI**: Google Gemini 1.5 Flash
-- **Build**: 2026
