@@ -201,7 +201,8 @@ Lightweight laptop with long battery
 
 | Home Screen | Search Results | Product Detail |
 |---|---|---|
-| ![Home]("C:\Users\Lenovo\Desktop\OneDrive\Pictures\Home.jpg"
+| ![Home](<img width="540" height="1131" alt="Home" src="https://github.com/user-attachments/assets/100b56fa-0fa2-4085-9de9-972a51146511" />
+
 ) | ![Results](./screenshots/results.png) | ![Detail](./screenshots/detail.png) |
 
 ---
