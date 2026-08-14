@@ -197,11 +197,11 @@ Lightweight laptop with long battery
 
 ## 📸 Screenshots
 
-> *(Replace this section with actual screenshots after running the app)*
+
 
 | Home Screen | Search Results | Product Detail |
 |---|---|---|
-| ![Home](<img width="1080" height="2262" alt="Screenshot_2026-08-14-16-12-18-386_host exp exponent" src="https://github.com/user-attachments/assets/2f9078a2-ffa6-41d7-8faf-582cd9f7b6d1" />
+| ![Home]("C:\Users\Lenovo\Desktop\OneDrive\Pictures\Home.jpg"
 ) | ![Results](./screenshots/results.png) | ![Detail](./screenshots/detail.png) |
 
 ---
